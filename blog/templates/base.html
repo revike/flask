@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        {{ title|title }}
+        {% endblock %}
+    </title>
+
+    {% block css %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    {% endblock %}
+
+    {% block js %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='js/bootstrap.bundle.js') }}">
+    {% endblock %}
+</head>
+
+<body>
+    {% include 'includes/inc_navbar.html' %}
+    <div class="container">
+        {% block body %}
+            <h1>{{ title_body|title }}</h1>
+        {% endblock %}
+    </div>
+</body>
+</html>
