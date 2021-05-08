@@ -38,15 +38,13 @@ def article_list():
 @article.route('/<int:pk>')
 def get_article(pk: int):
     try:
-        title_article = ARTICLES[pk-1]['title']
-        text = ARTICLES[pk-1]['text']
-        author = ARTICLES[pk-1]['author']
+        article_pk = ARTICLES[pk-1]
     except IndexError:
         return redirect('/articles/')
     return render_template(
         'articles/details.html',
-        title_body=title_article,
-        text=text,
-        author=author,
-        title=f'article - {title_article}'
+        title_body=article_pk['title'],
+        text=article_pk['text'],
+        author=article_pk['author'],
+        title=f'article - {article_pk["title"]}'
     )
