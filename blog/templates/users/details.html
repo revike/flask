@@ -2,5 +2,6 @@
 
 {% block body %}
     {{ super() }}
-    <p>{{ user_name }}</p>
+    <p>{{ user.username|title }}</p>
+    <p>{{ user.email }}</p>
 {% endblock %}

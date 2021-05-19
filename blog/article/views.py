@@ -1,50 +1,38 @@
 from flask import Blueprint, render_template, redirect
+from flask_login import login_required
+
+from blog.models.article import Article
+from blog.models.user import User
 
 article = Blueprint('article', __name__,
                     url_prefix='/articles', static_folder='../static')
 
-ARTICLES = [
-    {
-        'id': 1,
-        'title': 'some title #1',
-        'text': 'some text #1',
-        'author': {
-            'name': 'Alice',
-            'id': 1,
-        },
-    },
-    {
-        'id': 2,
-        'title': 'some title #2',
-        'text': 'some text #2',
-        'author': {
-            'name': 'John',
-            'id': 2,
-        },
-    }
-]
-
 
 @article.route('/')
+@login_required
 def article_list():
+    articles = Article.query.all()
     return render_template(
         'articles/list.html',
-        articles=ARTICLES,
+        articles=articles,
         title_body='articles:',
         title='article list'
     )
 
 
 @article.route('/<int:pk>')
+@login_required
 def get_article(pk: int):
-    try:
-        article_pk = ARTICLES[pk-1]
-    except IndexError:
+    articles = Article.query.filter_by(id=pk).one_or_none()
+    if not articles:
         return redirect('/articles/')
+    
+    author = User.query.filter_by(id=articles.author).one_or_none()
     return render_template(
         'articles/details.html',
-        title_body=article_pk['title'],
-        text=article_pk['text'],
-        author=article_pk['author'],
-        title=f'article - {article_pk["title"]}'
+        title_body=articles.title,
+        article=articles.id,
+        text=articles.text,
+        author=author.username,
+        title=f'article - {articles.title}'
     )
