@@ -3,12 +3,10 @@ from flask_login import LoginManager
 
 from blog.article.views import article
 from blog.auth.views import auth
-from blog.models.database import db
+from blog.models.database import db, migrate
 from blog.models.user import User
 from blog.report.views import report
 from blog.user.views import user
-
-# login_manager = LoginManager()
 
 
 def create_app() -> Flask:
@@ -18,13 +16,16 @@ def create_app() -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     db.init_app(app)
 
+    migrate.init_app(app, db, compare_type=True)
+
     login_manager = LoginManager(app)
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.filter_by(id=user_id).one_or_none()
+        # return User.query.filter_by(id=user_id).one_or_none()
+        return User.query.get(user_id)
 
     @login_manager.unauthorized_handler
     def unauthorized():

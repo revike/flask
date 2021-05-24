@@ -11,3 +11,4 @@ class User(db.Model, UserMixin):
     email = Column(String(255), unique=True)
     password = Column(String(255), default='1')
     is_staff = Column(Boolean, nullable=False, default=False)
+    is_active = Column(Boolean, default=True)
