@@ -1,38 +1,38 @@
 from flask import Flask, redirect, url_for
-from flask_login import LoginManager
 
+from blog import commands
 from blog.article.views import article
-from blog.auth.views import auth
-from blog.models.database import db, migrate
+from blog.extensions import login_manager, db, migrate, csrf
 from blog.models.user import User
+
 from blog.report.views import report
 from blog.user.views import user
+from blog.auth.views import auth
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = '^1*kronpwhp8z5%jy!-!$6igm^8xbge%8+-d_sr1@3@+a4q5d5'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config.from_object('blog.config')
+
+    register_extensions(app)
+    register_blueprints(app)
+    register_commands(app)
+    register_blueprints(app)
+
+    return app
+
+
+def register_extensions(app):
     db.init_app(app)
-
     migrate.init_app(app, db, compare_type=True)
+    csrf.init_app(app)
 
-    login_manager = LoginManager(app)
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):
-        # return User.query.filter_by(id=user_id).one_or_none()
-        return User.query.get(user_id)
-
-    @login_manager.unauthorized_handler
-    def unauthorized():
-        return redirect(url_for("auth.login"))
-
-    register_blueprints(app)
-    return app
+        return User.query.get(int(user_id))
 
 
 def register_blueprints(app: Flask):
@@ -40,3 +40,9 @@ def register_blueprints(app: Flask):
     app.register_blueprint(report)
     app.register_blueprint(article)
     app.register_blueprint(auth)
+
+
+def register_commands(app):
+    app.cli.add_command(commands.init_db)
+    app.cli.add_command(commands.create_users)
+    app.cli.add_command(commands.create_articles)

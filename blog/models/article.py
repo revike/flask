@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, ForeignKey, Integer
 
-from blog.models.database import db
+from blog.extensions import db
 
 
 class Article(db.Model):
