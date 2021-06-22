@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {{ super() }}
+    <p>{{ author.user.username|title }}</p>
+    <p>{{ author.user.email }}</p>
+{% endblock %}

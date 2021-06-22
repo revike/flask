@@ -20,5 +20,8 @@
         {% endfor %}
 
         {{ form.submit(class="btn btn-primary mb-3") }}
+
+        <a class="btn btn-success mb-3"
+           href="{{ url_for('auth.login') }}">Login</a>
     </form>
 {% endblock %}

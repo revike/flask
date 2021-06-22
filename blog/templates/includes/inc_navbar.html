@@ -17,9 +17,15 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                       href="{{ url_for('report.report_list') }}">Reports</a>
+                       href="{{ url_for('author.author_list') }}">Authors</a>
                 </li>
+
                 {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{{ url_for('article.create_article') }}">Create
+                            article</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link"
                            href="{{ url_for('auth.logout') }}">Logout</a>
@@ -29,10 +35,10 @@
                         <a class="nav-link"
                            href="{{ url_for('auth.login') }}">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="{{ url_for('auth.register') }}">Register</a>
-                    </li>
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link"#}
+{#                           href="{{ url_for('auth.register') }}">Register</a>#}
+{#                    </li>#}
                 {% endif %}
             </ul>
         </div>

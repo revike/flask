@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {{ super() }}
+    <div class="row">
+        <div class="col">
+            {% for author in authors %}
+                <ul>
+                    <li>
+                        <a href="{{ url_for('author.get_author', pk=author.user_id) }}">
+                            {{ author.user.username|title }}
+                        </a>
+                    </li>
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

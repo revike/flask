@@ -1,11 +1,11 @@
-from flask import Flask, redirect, url_for
+from flask import Flask
 
 from blog import commands
 from blog.article.views import article
+from blog.author.views import author
 from blog.extensions import login_manager, db, migrate, csrf
 from blog.models.user import User
 
-from blog.report.views import report
 from blog.user.views import user
 from blog.auth.views import auth
 
@@ -37,9 +37,9 @@ def register_extensions(app):
 
 def register_blueprints(app: Flask):
     app.register_blueprint(user)
-    app.register_blueprint(report)
     app.register_blueprint(article)
     app.register_blueprint(auth)
+    app.register_blueprint(author)
 
 
 def register_commands(app):

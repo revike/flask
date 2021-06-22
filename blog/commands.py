@@ -45,13 +45,13 @@ def create_articles():
         article_1 = Article(
             title='some title #1',
             text='some text #1',
-            author=1
+            author_id=1
         )
 
         article_2 = Article(
             title='some title #2',
             text='some text #2',
-            author=2
+            author_id=2
         )
 
         db.session.add(article_1)

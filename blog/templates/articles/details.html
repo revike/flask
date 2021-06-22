@@ -3,5 +3,5 @@
 {% block body %}
     {{ super() }}
     <p>{{ text }}</p>
-    <a href="{{ url_for('user.get_user', pk=article) }}">{{ author|title }}</a>
+    <a href="{{ url_for('author.get_author', pk=article) }}">{{ author|title }}</a>
 {% endblock %}
