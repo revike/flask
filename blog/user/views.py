@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect
 from flask_login import login_required
 
-from blog.models.user import User
+from blog.models_db.models import User
 
 user = Blueprint('user', __name__,
                  static_folder='../static', url_prefix='/users')

@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from blog.extensions import db
 from blog.forms.user import UserRegisterForm, UserLoginForm
-from blog.models.user import User
+from blog.models_db.models import User
 
 auth = Blueprint('auth', __name__, static_folder='../static')
 

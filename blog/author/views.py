@@ -1,7 +1,7 @@
 from flask import render_template, redirect, Blueprint
 from flask_login import login_required
 
-from blog.models.user import Author
+from blog.models_db.models import Author
 
 author = Blueprint('author', __name__,
                    static_folder='../static', url_prefix='/authors')

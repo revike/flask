@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
+from sqlalchemy.orm import joinedload
 
 from blog.extensions import db
 from blog.forms.article import CreateArticleForm
-from blog.models.article import Article
-from blog.models.user import User, Author
+from blog.models_db.models import Tag, Article, Author, User
+
 
 article = Blueprint('article', __name__,
                     url_prefix='', static_folder='../static')
@@ -26,20 +27,28 @@ def article_list():
 @login_required
 def create_article():
     form = CreateArticleForm(request.form)
+    form.tags.choices = [(tag.id, tag.name) for tag in
+                         Tag.query.order_by('name')]
+
     if request.method == 'POST':
 
         if form.validate_on_submit():
-            article_ = Article(title=form.title.data.strip(), text=form.text.data)
+            article_ = Article(title=form.title.data.strip(),
+                               text=form.text.data)
 
             author = Author(user_id=current_user.id)
             article_.author_id = current_user.id
 
-            db.session.add(article_)
+            if form.tags.data:
+                selected_tags = Tag.query.filter(Tag.id.in_(form.tags.data))
+                for tag in selected_tags:
+                    article_.tags.append(tag)
 
-            author_db = Author.query.filter_by(id=current_user.id)
+            author_db = Author.query.filter_by(user_id=current_user.id).first()
             if not author_db:
                 db.session.add(author)
 
+            db.session.add(article_)
             db.session.commit()
             return redirect(url_for('article.get_article', pk=article_.id))
 
@@ -54,7 +63,8 @@ def create_article():
 @article.route('/<int:pk>')
 @login_required
 def get_article(pk: int):
-    articles = Article.query.filter_by(id=pk).one_or_none()
+    articles = Article.query.filter_by(id=pk).options(
+        joinedload(Article.tags)).one_or_none()
     if not articles:
         return redirect('/articles/')
 
@@ -65,5 +75,5 @@ def get_article(pk: int):
         article=articles.id,
         text=articles.text,
         author=author.username,
-        title=f'article - {articles.title}'
+        title=f'article - {articles.title}',
     )

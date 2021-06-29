@@ -4,4 +4,14 @@
     {{ super() }}
     <p>{{ text }}</p>
     <a href="{{ url_for('author.get_author', pk=article) }}">{{ author|title }}</a>
+
+    <div>
+        tags:
+        <span>
+            {% for tag in article.tags %}
+                <p>{{ tag }}</p>
+            {% endfor %}
+        </span>
+    </div>
+
 {% endblock %}

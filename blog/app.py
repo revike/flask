@@ -4,7 +4,7 @@ from blog import commands
 from blog.article.views import article
 from blog.author.views import author
 from blog.extensions import login_manager, db, migrate, csrf
-from blog.models.user import User
+from blog.models_db.models import User
 
 from blog.user.views import user
 from blog.auth.views import auth
@@ -45,4 +45,4 @@ def register_blueprints(app: Flask):
 def register_commands(app):
     app.cli.add_command(commands.init_db)
     app.cli.add_command(commands.create_users)
-    app.cli.add_command(commands.create_articles)
+    app.cli.add_command(commands.create_tags)
