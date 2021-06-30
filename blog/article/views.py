@@ -48,6 +48,7 @@ def create_article():
             if not author_db:
                 db.session.add(author)
 
+            db.session.flush()
             db.session.add(article_)
             db.session.commit()
             return redirect(url_for('article.get_article', pk=article_.id))
