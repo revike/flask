@@ -3,6 +3,7 @@ from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, Table
 from sqlalchemy.orm import relationship
+from werkzeug.security import check_password_hash
 
 from blog.extensions import db
 
@@ -27,6 +28,9 @@ class User(db.Model, UserMixin):
 
     author = relationship('Author', back_populates='user', uselist=False)
 
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
 
 class Author(db.Model):
     __tablename__ = 'authors'
@@ -36,6 +40,9 @@ class Author(db.Model):
 
     user = relationship('User', back_populates='author')
     # articles = relationship('Article', back_populates='author')
+
+    def __str__(self):
+        return self.user.username
 
 
 class Article(db.Model):
@@ -63,3 +70,6 @@ class Tag(db.Model):
     articles = relationship('Article',
                             secondary=article_tag_associations_table,
                             back_populates='tags')
+
+    def __str__(self):
+        return self.name
