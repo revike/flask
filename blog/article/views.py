@@ -64,17 +64,18 @@ def create_article():
 @article.route('/<int:pk>')
 @login_required
 def get_article(pk: int):
-    articles = Article.query.filter_by(id=pk).options(
+    _article: Article = Article.query.filter_by(id=pk).options(
         joinedload(Article.tags)).one_or_none()
-    if not articles:
+    if not _article:
         return redirect('/articles/')
 
-    author = User.query.filter_by(id=articles.author_id).one_or_none()
+    author = User.query.filter_by(id=_article.author_id).one_or_none()
     return render_template(
         'articles/details.html',
-        title_body=articles.title,
-        article=articles.id,
-        text=articles.text,
+        title_body=_article.title,
+        article=_article.id,
+        text=_article.text,
         author=author.username,
-        title=f'article - {articles.title}',
+        _article=_article,
+        title=f'article - {_article.title}',
     )

@@ -2,7 +2,7 @@ import click
 from werkzeug.security import generate_password_hash
 
 from blog.extensions import db
-from blog.models_db.models import User, Tag, Article
+from blog.models_db.models import User, Tag
 
 
 @click.command('init-db')

@@ -1,14 +1,8 @@
 from flask import Flask
 
 from blog import commands
-# from blog.admin.views import admin_bp
-# from blog.article.views import article
-from blog.author.views import author
 from blog.extensions import login_manager, db, migrate, csrf, admin_panel
 from blog.models_db.models import User
-
-# from blog.user.views import user
-from blog.auth.views import auth
 
 
 def create_app() -> Flask:
@@ -18,7 +12,6 @@ def create_app() -> Flask:
     register_extensions(app)
     register_blueprints(app)
     register_commands(app)
-    register_blueprints(app)
 
     return app
 
@@ -38,11 +31,18 @@ def register_extensions(app):
 
 
 def register_blueprints(app: Flask):
-    # app.register_blueprint(user)
-    # app.register_blueprint(article)
+    from blog.user.views import user
+    from blog.auth.views import auth
+    from blog.article.views import article
+    from blog.author.views import author
+    from blog import admin
+
+    app.register_blueprint(user)
+    app.register_blueprint(article)
     app.register_blueprint(auth)
     app.register_blueprint(author)
-    # app.register_blueprint(admin_bp)
+
+    admin.register_views()
 
 
 def register_commands(app):

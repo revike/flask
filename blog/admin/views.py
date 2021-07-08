@@ -1,15 +1,20 @@
-# from flask import Blueprint
 from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask import redirect, url_for
-
-# from blog.admin.routes import admin_panel
-
-# admin_bp = Blueprint('admin_panel', __name__, url_prefix='/admin')
 from flask_login import current_user
 
 
 class CustomAdminView(ModelView):
+
+    def create_blueprint(self, admin):
+        blueprint = super().create_blueprint(admin)
+        blueprint.name = f'{blueprint.name}_admin'
+        return blueprint
+
+    def get_url(self, endpoint, **kwargs):
+        if not (endpoint.startswith('.') or endpoint.startswith('admin.')):
+            endpoint = endpoint.replace('.', '_admin.')
+        return super().get_url(endpoint, **kwargs)
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_staff
@@ -43,7 +48,8 @@ class UserAdminView(CustomAdminView):
     column_exclude_list = ('password',)
     column_details_exclude_list = ('password',)
     column_export_exclude_list = ('password',)
-    can_edit = False
+    can_edit = True
     can_delete = False
-    column_editable_list = ('username', 'is_staff', 'is_active',)
+    can_view_details = False
     can_create = False
+    form_columns = ('username', 'is_staff', 'is_active',)
