@@ -70,3 +70,4 @@ def register_commands(app):
     app.cli.add_command(commands.init_db)
     app.cli.add_command(commands.create_users)
     app.cli.add_command(commands.create_tags)
+    app.cli.add_command(commands.create_articles)
