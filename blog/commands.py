@@ -2,7 +2,7 @@ import click
 from werkzeug.security import generate_password_hash
 
 from blog.extensions import db
-from blog.models_db.models import User, Tag
+from blog.models_db.models import User, Tag, Article
 
 
 @click.command('init-db')
@@ -35,6 +35,30 @@ def create_users():
 
         db.session.commit()
         print('create users!')
+
+
+@click.command('create-articles')
+def create_articles():
+    from wsgi import app
+    with app.app_context():
+        article_1 = Article(
+            title='some title #1',
+            text='some text #1',
+            author_id=1
+        )
+
+        article_2 = Article(
+            title='some title #2',
+            text='some text #2',
+            author_id=2
+        )
+
+        db.session.add(article_1)
+        db.session.add(article_2)
+
+        db.session.commit()
+
+        print('create articles!')
 
 
 @click.command('create-tags')
